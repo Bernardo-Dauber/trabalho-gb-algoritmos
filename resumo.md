@@ -177,6 +177,33 @@ def kadane(arr):
 
 ---
 
+# Resumo
+
+## Algoritmo 2: Força Bruta
+
+O algoritmo de força bruta implementado no arquivo `algoritmo_2.py` busca encontrar a submatriz com a maior soma em uma matriz bidimensional. Ele utiliza uma abordagem exaustiva, verificando todas as combinações possíveis de submatrizes para calcular suas somas e determinar a maior soma encontrada.
+
+### Funcionamento:
+1. **Iteração sobre limites da submatriz:**
+   - O algoritmo percorre todas as combinações possíveis de linhas superiores, linhas inferiores, colunas esquerdas e colunas direitas que definem os limites de uma submatriz.
+
+2. **Cálculo da soma da submatriz:**
+   - Para cada combinação de limites, o algoritmo soma os elementos da submatriz correspondente.
+
+3. **Atualização da melhor soma:**
+   - Se a soma da submatriz atual for maior que a soma máxima registrada, o algoritmo atualiza a soma máxima e armazena a configuração da submatriz correspondente.
+
+4. **Resultado:**
+   - Ao final, o algoritmo retorna a maior soma encontrada e imprime o valor.
+
+### Complexidade:
+A complexidade do algoritmo é $O(n^6)$, onde $n$ é o tamanho da matriz, devido às múltiplas iterações aninhadas para calcular todas as combinações possíveis de submatrizes e somar seus elementos.
+
+### Aplicação:
+Embora seja ineficiente para matrizes grandes, o algoritmo é útil para fins educacionais e para entender abordagens exaustivas na resolução de problemas.
+
+---
+
 ## 🎓 Conclusão
 
 Você transformou um problema 2D complexo em múltiplos problemas 1D mais simples! A chave foi:

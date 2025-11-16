@@ -3,11 +3,6 @@ from tabulate import tabulate
 import matplotlib.pyplot as plt
 
 # Matrizes de exemplo
-m1 = [
-    [1, -2],
-    [3, 4]
-]
-
 m2 = [
     [0, -2, 3],
     [4, 5, -6],
@@ -29,62 +24,6 @@ m4 = [
     [0, -4, 10, -5, 1]
 ]
 
-# Move as definições das matrizes para antes do uso
-m6 = [
-    [2, -1, 3, 0, -2, 4],
-    [-3, 5, -6, 2, 1, -4],
-    [4, 2, -1, 3, -5, 2],
-    [0, -2, 1, 4, 3, -1],
-    [1, 3, -2, -3, 2, 5],
-    [-4, 2, 3, -1, 0, 1]
-]
-
-m7 = [
-    [1, -2, 3, 0, -2, 4, 2],
-    [-3, 5, -6, 2, 1, -4, 3],
-    [4, 2, -1, 3, -5, 2, -2],
-    [0, -2, 1, 4, 3, -1, 1],
-    [1, 3, -2, -3, 2, 5, -3],
-    [-4, 2, 3, -1, 0, 1, 4],
-    [2, -1, 0, 3, -2, 2, 1]
-]
-
-m8 = [
-    [2, -1, 3, 0, -2, 4, 2, 1],
-    [-3, 5, -6, 2, 1, -4, 3, 0],
-    [4, 2, -1, 3, -5, 2, -2, 2],
-    [0, -2, 1, 4, 3, -1, 1, -3],
-    [1, 3, -2, -3, 2, 5, -3, 4],
-    [-4, 2, 3, -1, 0, 1, 4, -2],
-    [2, -1, 0, 3, -2, 2, 1, 3],
-    [1, 2, -3, 4, 0, -1, 2, 5]
-]
-
-m9 = [
-    [2, -1, 3, 0, -2, 4, 2, 1, -3],
-    [-3, 5, -6, 2, 1, -4, 3, 0, 2],
-    [4, 2, -1, 3, -5, 2, -2, 2, 1],
-    [0, -2, 1, 4, 3, -1, 1, -3, 4],
-    [1, 3, -2, -3, 2, 5, -3, 4, -2],
-    [-4, 2, 3, -1, 0, 1, 4, -2, 3],
-    [2, -1, 0, 3, -2, 2, 1, 3, -1],
-    [1, 2, -3, 4, 0, -1, 2, 5, 2],
-    [3, -2, 1, -4, 2, 0, 1, -3, 4]
-]
-
-m10 = [
-    [2, -1, 3, 0, -2, 4, 2, 1, -3, 5],
-    [-3, 5, -6, 2, 1, -4, 3, 0, 2, -1],
-    [4, 2, -1, 3, -5, 2, -2, 2, 1, 3],
-    [0, -2, 1, 4, 3, -1, 1, -3, 4, 2],
-    [1, 3, -2, -3, 2, 5, -3, 4, -2, 1],
-    [-4, 2, 3, -1, 0, 1, 4, -2, 3, -2],
-    [2, -1, 0, 3, -2, 2, 1, 3, -1, 4],
-    [1, 2, -3, 4, 0, -1, 2, 5, 2, -3],
-    [3, -2, 1, -4, 2, 0, 1, -3, 4, 2],
-    [0, 1, -2, 3, -1, 2, 4, -2, 1, 3]
-]
-
 
 def kadane(arr):
     max_atual = max_total = arr[0]
@@ -92,6 +31,7 @@ def kadane(arr):
         max_atual = max(x, max_atual + x)
         max_total = max(max_total, max_atual)
     return max_total
+
 
 def melhor_soma_matriz(m):
     N = len(m)
@@ -107,70 +47,78 @@ def melhor_soma_matriz(m):
                 melhor_soma = soma_atual
     return melhor_soma
 
+
+def forca_bruta(matriz):
+    tamanho = len(matriz)
+    soma_maxima = float('-inf')
+    melhor_configuracao = None
+
+    for linha_superior in range(tamanho):
+        for linha_inferior in range(linha_superior, tamanho):
+            for coluna_esquerda in range(tamanho):
+                for coluna_direita in range(coluna_esquerda, tamanho):
+                    soma_atual = 0
+                    for linha in range(linha_superior, linha_inferior + 1):
+                        for coluna in range(coluna_esquerda, coluna_direita + 1):
+                            soma_atual += matriz[linha][coluna]
+                    if soma_atual > soma_maxima:
+                        soma_maxima = soma_atual
+                        melhor_configuracao = (linha_superior, linha_inferior, coluna_esquerda, coluna_direita)
+    print("Soma máxima encontrada: {}".format(soma_maxima))
+    return soma_maxima
+
+
 matrizes = [
-    ("2x2", m1),
     ("3x3", m2),
     ("4x4", m3),
-    ("5x5", m4),
-    ("6x6", m6),
-    ("7x7", m7),
-    ("8x8", m8),
-    ("9x9", m9),
-    ("10x10", m10)
+    ("5x5", m4)
 ]
 
 resultados = []
 
 for nome, matriz in matrizes:
     inicio = time.time()
-    soma = melhor_soma_matriz(matriz)
+    soma_melhor = melhor_soma_matriz(matriz)
     fim = time.time()
-    tempo = fim - inicio
-    resultados.append([nome, f"{len(matriz)}x{len(matriz[0])}", soma, f"{tempo:.6f} s"])
+    tempo_melhor = fim - inicio
 
+    inicio = time.time()
+    soma_bruta = forca_bruta(matriz)
+    fim = time.time()
+    tempo_bruta = fim - inicio
 
-print(tabulate(resultados, headers=["Matriz", "Tamanho", "Melhor Soma", "Tempo Execução"]))
+    resultados.append([nome, soma_melhor, tempo_melhor, soma_bruta, tempo_bruta])
 
-# Gerar diferentes tipos de gráficos com matplotlib
-# Extrai nomes das matrizes e tempos de execução
+print(tabulate(resultados, headers=["Matriz", "Melhor Soma (Kadane)", "Tempo Kadane", "Melhor Soma (Força Bruta)", "Tempo Força Bruta"]))
+
+# Gerar gráficos comparativos
 nomes = [linha[0] for linha in resultados]
-tempos = [float(linha[3].split()[0]) for linha in resultados]
+tempos_kadane = [linha[2] for linha in resultados]
+tempos_bruta = [linha[4] for linha in resultados]
 
-# Salvar gráficos na pasta 'graficos'
-# Gráfico de barras
+# Gráfico de barras comparativo
 plt.figure(figsize=(8, 5))
-plt.bar(nomes, tempos, color='skyblue')
+bar_width = 0.35
+indices = range(len(nomes))
+plt.bar(indices, tempos_kadane, bar_width, label='Kadane', color='blue')
+plt.bar([i + bar_width for i in indices], tempos_bruta, bar_width, label='Força Bruta', color='red')
 plt.xlabel('Matriz')
 plt.ylabel('Tempo de Execução (s)')
-plt.title('Tempo de Execução por Matriz')
+plt.title('Comparação de Tempo de Execução')
+plt.xticks([i + bar_width / 2 for i in indices], nomes)
+plt.legend()
 plt.tight_layout()
-plt.savefig('graficos/tempo_execucao_barras.png')
+plt.savefig('graficos/comparacao_tempo_barras.png')
 plt.close()
 
-# Gráfico de linhas
+# Gráfico de linhas comparativo
 plt.figure(figsize=(8, 5))
-plt.plot(nomes, tempos, marker='o', linestyle='-', color='green')
+plt.plot(nomes, tempos_kadane, marker='o', linestyle='-', color='blue', label='Kadane')
+plt.plot(nomes, tempos_bruta, marker='o', linestyle='-', color='red', label='Força Bruta')
 plt.xlabel('Matriz')
 plt.ylabel('Tempo de Execução (s)')
-plt.title('Tempo de Execução por Matriz ')
+plt.title('Comparação de Tempo de Execução')
+plt.legend()
 plt.tight_layout()
-plt.savefig('graficos/tempo_execucao_linhas.png')
-plt.close()
-
-# Gráfico de pizza
-plt.figure(figsize=(7, 7))
-plt.pie(tempos, labels=nomes, autopct='%1.4f s')
-plt.title('Proporção do Tempo de Execução por Matriz ')
-plt.tight_layout()
-plt.savefig('graficos/tempo_execucao_pizza.png')
-plt.close()
-
-# Gráfico de barras horizontais (cada linha é uma matriz)
-plt.figure(figsize=(8, 5))
-plt.barh(nomes, tempos, color='orange')
-plt.ylabel('Matriz')
-plt.xlabel('Tempo de Execução (s)')
-plt.title('Tempo de Execução por Matriz ')
-plt.tight_layout()
-plt.savefig('graficos/tempo_execucao_barras_horizontais.png')
+plt.savefig('graficos/comparacao_tempo_linhas.png')
 plt.close()
